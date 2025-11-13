@@ -29,7 +29,7 @@ interface HTMLFieldProps {
   label?: string;
 }
 
-export function HTMLField({ value, onChange, name, label }: HTMLFieldProps) {
+export function HTMLField({ value, onChange, label }: HTMLFieldProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [editorValue, setEditorValue] = useState(value || "");
 
@@ -72,7 +72,7 @@ export function HTMLField({ value, onChange, name, label }: HTMLFieldProps) {
       )}
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-[95vw] h-[90vh] flex flex-col p-0">
+        <DialogContent className="!max-w-[90vw] h-[90vh] flex flex-col p-0">
           <DialogHeader className="px-6 pt-6 pb-4 border-b">
             <DialogTitle>Edit HTML Code</DialogTitle>
           </DialogHeader>
