@@ -6,3 +6,71 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// ============================================
+// User Model
+// ============================================
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  passwordHash String? // สำหรับ authentication
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  pages     Page[]
+  sessions  Session[]
+}
+
+// ============================================
+// Session Model (Authentication)
+// ============================================
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// ============================================
+// Page Model (Puck.js CMS)
+// ============================================
+
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Page {
+  id          String     @id @default(cuid())
+  slug        String     @unique // URL path เช่น "/about", "/contact", "/home"
+  title       String
+  description String?    // Meta description for SEO
+  
+  // Puck.js content - เก็บเป็น JSON
+  // Structure: { content: [...], root: {...}, zones: {...} }
+  // ดูรายละเอียด: https://puckeditor.com/docs
+  content     Json       // Prisma Json type (PostgreSQL JSONB)
+  
+  // Metadata
+  status      PageStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  // Relations
+  authorId    String?
+  author      User?      @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  
+  @@index([slug])
+  @@index([status])
+  @@index([authorId])
+}
