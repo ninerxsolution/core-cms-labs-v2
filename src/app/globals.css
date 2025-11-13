@@ -123,28 +123,12 @@
 
 /* Custom Puck Editor Styles */
 @layer components {
-  /* Hide the default Publish button in Puck editor header */
-  /* We have our own Save button in the custom toolbar */
-  [class*="_Puck-header"] button[class*="_Button"][class*="--primary"] {
-    display: none !important;
-  }
-
-  /* Alternative: If you want to keep the button but customize it, uncomment below */
+  /* Customize the default Publish button in Puck editor header if needed */
   /*
   [class*="_Puck-header"] button[class*="_Button"][class*="--primary"] {
     @apply bg-primary text-primary-foreground hover:bg-primary/90;
     @apply rounded-md px-4 py-2;
     @apply font-medium transition-colors;
-  }
-  */
-
-  /* Alternative: Change button text to Thai */
-  /*
-  [class*="_Puck-header"] button[class*="_Button"][class*="--primary"]::after {
-    content: "บันทึก";
-  }
-  [class*="_Puck-header"] button[class*="_Button"][class*="--primary"] > * {
-    display: none;
   }
   */
 }
