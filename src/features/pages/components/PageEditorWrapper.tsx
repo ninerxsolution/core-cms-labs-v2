@@ -108,6 +108,7 @@ export function PageEditorWrapper({ page: initialPage }: PageEditorWrapperProps)
           onPageInfo={() => setIsPageInfoModalOpen(true)}
           onExit={handleExit}
           isLoading={isSaving}
+          pageTitle={form.watch("title")}
         />
       </div>
 

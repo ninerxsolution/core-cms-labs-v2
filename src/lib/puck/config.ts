@@ -193,6 +193,14 @@ export const puckConfig: Config = {
             { value: "large", label: "Large" },
           ],
         },
+        id: {
+          type: "text",
+          label: "ID",
+        },
+        className: {
+          type: "text",
+          label: "Custom Classes",
+        },
       },
       defaultProps: {
         padding: "medium",
@@ -205,9 +213,11 @@ export const puckConfig: Config = {
         justifyContent: "flex-start",
         flexWrap: "nowrap",
         gap: "none",
-        content: [],
+        id: "",
+        className: "",
+        // content: [],
       },
-      render: ({ padding, margin, maxWidth, backgroundColor, display = "block", flexDirection = "row", alignItems = "flex-start", justifyContent = "flex-start", flexWrap = "nowrap", gap = "none", content: Content }) => {
+      render: ({ padding, margin, maxWidth, backgroundColor, display = "block", flexDirection = "row", alignItems = "flex-start", justifyContent = "flex-start", flexWrap = "nowrap", gap = "none", id, className, content: Content }) => {
         const paddingClasses = {
           none: "p-0",
           small: "p-4",
@@ -226,7 +236,7 @@ export const puckConfig: Config = {
           lg: "max-w-5xl",
           xl: "max-w-7xl",
         };
-        
+
         // Display classes
         const displayClasses = {
           block: "block",
@@ -236,7 +246,7 @@ export const puckConfig: Config = {
           "inline-block": "inline-block",
           none: "hidden",
         };
-        
+
         // Flex direction classes
         const flexDirectionClasses = {
           row: "flex-row",
@@ -244,7 +254,7 @@ export const puckConfig: Config = {
           "row-reverse": "flex-row-reverse",
           "column-reverse": "flex-col-reverse",
         };
-        
+
         // Align items classes
         const alignItemsClasses = {
           "flex-start": "items-start",
@@ -253,7 +263,7 @@ export const puckConfig: Config = {
           stretch: "items-stretch",
           baseline: "items-baseline",
         };
-        
+
         // Justify content classes
         const justifyContentClasses = {
           "flex-start": "justify-start",
@@ -263,14 +273,14 @@ export const puckConfig: Config = {
           "space-around": "justify-around",
           "space-evenly": "justify-evenly",
         };
-        
+
         // Flex wrap classes
         const flexWrapClasses = {
           nowrap: "flex-nowrap",
           wrap: "flex-wrap",
           "wrap-reverse": "flex-wrap-reverse",
         };
-        
+
         // Gap classes
         const gapClasses = {
           none: "gap-0",
@@ -278,11 +288,11 @@ export const puckConfig: Config = {
           medium: "gap-4",
           large: "gap-6",
         };
-        
+
         // Helper function เพื่อ parse padding/margin แบบ 4 ด้าน
         const parseSpacing = (val: string): { top: string; right: string; bottom: string; left: string } | null => {
           if (!val) return null;
-          
+
           // ถ้าเป็น JSON string
           try {
             const parsed = JSON.parse(val);
@@ -297,7 +307,7 @@ export const puckConfig: Config = {
           } catch {
             // ไม่ใช่ JSON
           }
-          
+
           // ถ้าเป็น CSS shorthand
           const parts = val.trim().split(/\s+/);
           if (parts.length === 1 && (parts[0].includes("px") || parts[0].includes("rem") || parts[0].includes("em") || parts[0].includes("%"))) {
@@ -307,39 +317,39 @@ export const puckConfig: Config = {
           } else if (parts.length === 4) {
             return { top: parts[0], right: parts[1], bottom: parts[2], left: parts[3] };
           }
-          
+
           return null;
         };
-        
+
         // ตรวจสอบว่า padding เป็น preset หรือ custom
         const isPaddingPreset = padding && paddingClasses[padding as keyof typeof paddingClasses];
-        const paddingClass = isPaddingPreset 
+        const paddingClass = isPaddingPreset
           ? paddingClasses[padding as keyof typeof paddingClasses]
           : "";
         const customPaddingClass = padding && !isPaddingPreset && (padding.startsWith("p-") || padding.startsWith("px-") || padding.startsWith("py-") || padding.startsWith("pt-") || padding.startsWith("pb-") || padding.startsWith("pl-") || padding.startsWith("pr-"))
-          ? padding 
+          ? padding
           : "";
-        
+
         // ตรวจสอบว่า margin เป็น preset หรือ custom
         const isMarginPreset = margin && marginClasses[margin as keyof typeof marginClasses];
-        const marginClass = isMarginPreset 
+        const marginClass = isMarginPreset
           ? marginClasses[margin as keyof typeof marginClasses]
           : "";
         const customMarginClass = margin && !isMarginPreset && (margin.startsWith("m-") || margin.startsWith("mx-") || margin.startsWith("my-") || margin.startsWith("mt-") || margin.startsWith("mb-") || margin.startsWith("ml-") || margin.startsWith("mr-"))
-          ? margin 
+          ? margin
           : "";
-        
+
         // ตรวจสอบว่า maxWidth เป็น preset หรือ custom
         const isMaxWidthPreset = maxWidth && maxWidthClasses[maxWidth as keyof typeof maxWidthClasses];
-        const maxWidthClass = isMaxWidthPreset 
+        const maxWidthClass = isMaxWidthPreset
           ? maxWidthClasses[maxWidth as keyof typeof maxWidthClasses]
           : "";
-        
+
         const style: React.CSSProperties = {};
         if (backgroundColor) {
           style.backgroundColor = backgroundColor;
         }
-        
+
         // Apply custom gap values via style (ถ้าไม่ใช่ preset)
         if ((display === "flex" || display === "grid" || display === "inline-flex") && gap && !gapClasses[gap as keyof typeof gapClasses]) {
           // ถ้า gap ไม่ใช่ preset ให้ใช้ style
@@ -347,7 +357,7 @@ export const puckConfig: Config = {
             style.gap = gap;
           }
         }
-        
+
         // Parse และ apply padding แบบ 4 ด้าน
         if (padding && !isPaddingPreset && !customPaddingClass) {
           const paddingSides = parseSpacing(padding);
@@ -361,7 +371,7 @@ export const puckConfig: Config = {
             style.padding = padding;
           }
         }
-        
+
         // Parse และ apply margin แบบ 4 ด้าน
         if (margin && !isMarginPreset && !customMarginClass) {
           const marginSides = parseSpacing(margin);
@@ -375,46 +385,46 @@ export const puckConfig: Config = {
             style.margin = margin;
           }
         }
-        
+
         // ถ้าเป็น custom maxWidth value ให้ใช้ style
         if (maxWidth && !isMaxWidthPreset) {
           style.maxWidth = maxWidth.includes("px") || maxWidth.includes("rem") || maxWidth.includes("em") || maxWidth.includes("%")
             ? maxWidth
             : maxWidth.startsWith("max-w-")
-            ? undefined // ถ้าเป็น Tailwind class ให้ใช้ className แทน
-            : maxWidth;
+              ? undefined // ถ้าเป็น Tailwind class ให้ใช้ className แทน
+              : maxWidth;
         }
-        
+
         // ถ้าเป็น Tailwind class ที่ไม่ใช่ preset ให้ใช้ className
-        const customMaxWidthClass = maxWidth && !isMaxWidthPreset && maxWidth.startsWith("max-w-") 
-          ? maxWidth 
+        const customMaxWidthClass = maxWidth && !isMaxWidthPreset && maxWidth.startsWith("max-w-")
+          ? maxWidth
           : "";
-        
+
         // สร้าง className โดยรวม layout classes รวม display, flex, และ gap
         // ใช้ default values ถ้า props เป็น undefined
         const displayClass = displayClasses[display as keyof typeof displayClasses] || "";
-        
+
         // Apply flex classes เมื่อ display เป็น flex
-        const flexDirectionClass = (display === "flex" || display === "inline-flex") 
+        const flexDirectionClass = (display === "flex" || display === "inline-flex")
           ? (flexDirectionClasses[flexDirection as keyof typeof flexDirectionClasses] || "")
           : "";
-        
+
         const alignItemsClass = (display === "flex" || display === "inline-flex")
           ? (alignItemsClasses[alignItems as keyof typeof alignItemsClasses] || "")
           : "";
-        
+
         const justifyContentClass = (display === "flex" || display === "inline-flex")
           ? (justifyContentClasses[justifyContent as keyof typeof justifyContentClasses] || "")
           : "";
-        
+
         const flexWrapClass = (display === "flex" || display === "inline-flex")
           ? (flexWrapClasses[flexWrap as keyof typeof flexWrapClasses] || "")
           : "";
-        
+
         const gapClass = (display === "flex" || display === "grid" || display === "inline-flex") && gap && gap !== "none"
           ? (gapClasses[gap as keyof typeof gapClasses] || "")
           : "";
-        
+
         const classNames = [
           displayClass,
           flexDirectionClass,
@@ -430,11 +440,14 @@ export const puckConfig: Config = {
           customMaxWidthClass,
           // เพิ่ม mx-auto เฉพาะเมื่อไม่มี margin class ที่จะ override และ display ไม่ใช่ flex/grid
           !marginClass && !customMarginClass && display !== "flex" && display !== "grid" && display !== "inline-flex" ? "mx-auto" : "",
+          // เพิ่ม custom className ที่ user ใส่เข้ามา
+          className || "",
         ].filter(Boolean).join(" ");
-        
+
         return React.createElement(
           "div",
           {
+            id: id || undefined,
             className: classNames,
             style,
           },
@@ -472,7 +485,7 @@ export const puckConfig: Config = {
         };
         const baseClasses = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none h-10 py-2 px-4";
         const className = `${baseClasses} ${variantClasses[variant as keyof typeof variantClasses] || variantClasses.default}`;
-        
+
         if (href) {
           return React.createElement("a", { href, className }, text);
         }
@@ -558,6 +571,46 @@ export const puckConfig: Config = {
         });
       },
     },
+    ContainerOriginal: {
+      label: "Container Original",
+      fields: {
+        content: { type: "slot", label: "Content Original" },
+        padding: {
+          type: "select",
+          label: "Padding",
+          options: [
+            { value: "none", label: "None" },
+            { value: "small", label: "Small" },
+            { value: "medium", label: "Medium" },
+            { value: "large", label: "Large" },
+          ],
+        },
+      },
+      defaultProps: {
+        padding: "medium",
+        // content: [],
+      },
+      render: ({ padding, content: Content }) => {
+        const paddingClasses = {
+          none: "p-0",
+          small: "p-4",
+          medium: "p-6",
+          large: "p-8",
+        };
+
+        const paddingClass = padding && paddingClasses[padding as keyof typeof paddingClasses]
+          ? paddingClasses[padding as keyof typeof paddingClasses]
+          : "";
+
+        return React.createElement(
+          "div",
+          {
+            className: paddingClass,
+          },
+          Content ? React.createElement(Content) : null
+        );
+      },
+    },
   },
   categories: {
     typography: {
@@ -566,7 +619,7 @@ export const puckConfig: Config = {
     },
     layout: {
       title: "Layout",
-      components: ["Container", "Divider", "HTML"],
+      components: ["Container", "ContainerOriginal", "Divider", "HTML"],
     },
     interactive: {
       title: "Interactive",
